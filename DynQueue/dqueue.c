@@ -4,22 +4,24 @@
 
 struct DQueue{
     int *array;
-    int front,rear;
+    int front,rear,size;
     int capacity;
 };
 dque *Create_DQueue(){
     dque *que = malloc(sizeof(dque));
     que->front = que->rear = -1;
     que->capacity = 5;
+    que->size = 0;
     que->array = malloc(que->capacity * sizeof(int));
     return que;
 }
 void Enqueue(dque* que, int data){
-    if(!Is_Full(que)){
+    if(Is_Full(que)){
         Double_DQueue(que);
     }
     que->rear = (que->rear + 1) % que->capacity;
     que->array[que->rear] = data;
+    que->size++;
     if(que->front == -1){
         que->front = que->rear;
     }
@@ -36,12 +38,15 @@ int Dequeue(dque* que){
         }
         else{
             que->front = (que->front + 1) % que->capacity;
+            que->size--;
         }
     }
     return data;
 }
 int Is_Full(dque* que){
-    return ((que->rear + 1) % que->capacity == que->front); 
+    //need to fix this calculation
+    //return ((que->rear + 1) % que->capacity == que->front);
+    return (que->size == que->capacity);
     //return que->rear == que->capacity - 1;
 }
 int Is_Empty(dque* que){
